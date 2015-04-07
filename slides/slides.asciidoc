@@ -1,0 +1,82 @@
+Functional Programming With Scala
+=================================
+:author:    Lee Avital
+:copyright: Foobar Inc.
+:max-width: 45em
+:data-uri:
+:icons:
+
+
+Why Functional Programming
+--------------------------
+
+=== Referential transparency (no side effects)
+
+
+[source,python]
+---------------------
+def length(s):
+  False = True
+  return len(s)
+---------------------
+
+
+=== First class functions allow us to be very expressive
+
+
+Iterative:
+[source,python]
+---------------------------
+lengths = []
+for x in xs:
+  lengths.append(len(x))
+---------------------------
+
+
+Functional:
+[source,python]
+----------------------
+lengths = map(len, xs)
+----------------------
+
+
+Why a strong type system?
+-------------------------
+
+=== Null is bad
+
+[source,java]
+-----------------------------------
+String s = null;
+System.out.println(s.toString());
+-----------------------------------
+
+=== Casting is bad
+
+[source,java]
+---------------------------------------------------
+public ActionBox getActionBox( Component a ) {
+  return (ActionBox) a;
+}
+---------------------------------------------------
+
+
+Why Scala
+---------
+
+* JVM based
+** we can use Hadoop, Finagle, everything in the Java ecosystem.
+* Strong type system
+* Less verbose library design than Java
+
+[source,java]
+-----------------------
+System.out.println("hello world")
+-----------------------
+
+
+[source,scala]
+-----------------
+println("hello world")
+-----------------
+
