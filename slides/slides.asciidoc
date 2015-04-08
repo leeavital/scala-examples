@@ -68,6 +68,7 @@ Why Scala
 ** we can use Hadoop, Finagle, everything in the Java ecosystem.
 * Strong type system
 * Less verbose library design than Java
+* Interactive top level (REPL)
 
 [source,java]
 -----------------------
@@ -79,4 +80,12 @@ System.out.println("hello world")
 -----------------
 println("hello world")
 -----------------
+
+
+Let's look at some examples
+----------------------------
+
+--------------------------------------------
+http://github.com/leeavital/scala-examples
+--------------------------------------------
 

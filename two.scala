@@ -1,12 +1,11 @@
+// We've changed all of the unsafe functions to return an Option and made sure both were defined
+//
+// This solves the problem of unmanaged exceptions. We can't use toAge without handling the failure cases
+//
 // problem:
-//  exceptions are unmanaged (toAge and toColor are unsafe.) If I type in the age 
-//  wrong, the program explodes. Notice that scala does not have a notion of caught vs caught
-//  exceptions
+// deep nesting of match-case
+// errors come from the caller, not the callee
 
-object Color extends Enumeration {
-  type Color = Value
-  val Red, Blue, Green = Value
-}
 
 
 object Main extends App {
@@ -23,33 +22,46 @@ object Main extends App {
   print("enter a color: ")
   val color = toColor(getLine)
 
+  // this won't compile because age, and color are Option[Int] and
+  // Option[Color] respectively
+  // val person =  Person(name, age, color)
 
-  val person = Person(name, age, color)
-  printPerson(person)
-  
-  def toAge(s: String) : Int = {
-    Integer.parseInt(s)
+  color match {
+    case Some(color) =>
+      age match {
+        case Some(age) =>
+          printPerson(Person(name, age, color))
+        case None =>
+          // we are inferring what "None" means
+          println("error: bad age")
+      }
+    case None =>
+      println("error: bad color")
   }
 
-  def toColor(s : String) : Color = {
-    if( s == "red" ) {
-      Red
-    } else if (s == "green" ){
-      Green
-    } else if( s == "blue") {
-      Blue
-    } else {
-      throw new Exception("Bad color: " + s)
+  def toAge(s: String) : Option[Int] = {
+    try {
+      Some(Integer.parseInt(s))
+    } catch {
+      case e: Exception => None
     }
   }
 
-
-
-  def printPerson(p: Person) = {
-    println(name + " is " + p.age + " years old; " +  p.name + "'s favorite color is " + p.color)
+  def toColor(s : String) : Option[Color] = {
+    if( s == "red" ) {
+      Some(Red)
+    } else if (s == "green" ){
+      Some(Green)
+    } else if( s == "blue") {
+      Some(Blue)
+    } else {
+      None
+    }
   }
 
-
+  def printPerson(p: Person) = {
+    println(p.name + " is " + p.age + " years old; " +  p.name + "'s favorite color is " + p.color)
+  }
 }
 
 object IO {
@@ -57,4 +69,10 @@ object IO {
   def getLine() =  {
     scan.nextLine
   }
+
+}
+
+object Color extends Enumeration {
+  type Color = Value
+  val Red, Blue, Green = Value
 }

@@ -1,7 +1,13 @@
-// We've changed all of the unsafe functions to return an Option and made sure both were defined
-// problem:
-// deep nesting of match-case
-// errors come from the caller, not the callee
+// Let's talk about options as lists with 1 or 0 elements.
+//
+// Now we are using Option.map and Option.flatMap
+// There is less nesting, but  we've exacerbated the error problem. We have no idea
+// where errors come from!
+//
+// Notice the lambda/anonymous function sentence, also notice the use an alternative for comprehension
+//
+// Bonus points: this program does not fail the same way two.scala does. Can you tell how?
+
 
 object Color extends Enumeration {
   type Color = Value
@@ -13,30 +19,35 @@ object Main extends App {
   import Color._
   import IO._
 
-
   case class Person(name: String, age: Int, color: Color)
 
-  print("enter a name: ")
+
+  print("Enter a name: ")
   val name = getLine
-  print("enter an age: ")
+  print("Enter an age: ")
   val age = toAge(getLine)
-  print("enter a color: ")
-  val color = toColor(getLine)
+  val output = age.flatMap { age =>
+    print("Enter a color: ")
+    val color = toColor(getLine)
+    color.map { color =>
+      Person(name, age, color)
+    }
+  }
 
-  // this won't compile because age, and color are Option[Int] and
-  // Option[Color] respectively
-  val person =  Person(name, age, color)
+  // this is an equivalend sugared version
+  //
+  // print("enter a name: ")
+  // val output = for {
+  //   name <- Some(getLine)
+  //   _ = print("enter an age: ")
+  //   age <- toAge(getLine)
+  //   _ = print("enter a color: ")
+  //   color <- toColor(getLine)
+  // } yield Person(name, age, color)
 
-  color match {
-    case Some(color) =>
-      age match {
-        case Some(age) =>
-          printPerson(Person(name, age, color))
-        case None =>
-          println("error: bad age")
-      }
-    case None =>
-      println("error: bad color")
+  output match {
+    case Some(p) => printPerson(p)
+    case None => println("error")
   }
 
   def toAge(s: String) : Option[Int] = {
@@ -60,7 +71,7 @@ object Main extends App {
   }
 
   def printPerson(p: Person) = {
-    println(name + " is " + p.age + " years old; " +  p.name + "'s favorite color is " + p.color)
+    println(p.name + " is " + p.age + " years old; " +  p.name + "'s favorite color is " + p.color)
   }
 }
 
@@ -69,5 +80,4 @@ object IO {
   def getLine() =  {
     scan.nextLine
   }
-
 }

@@ -1,12 +1,13 @@
-// Now we use Either[String,String]
+// Let's introduce some more functionality imperatively first
 //
-// This hits all the bases: typesafe, error handling, returning rich types when there is a possibility for failure
-// let's just clean it up a bit
-
-object Color extends Enumeration {
-  type Color = Value
-  val Red, Blue, Green = Value
-}
+// Notice that we now use "var" instead of "val"
+//
+// Think about how many typos could break introduce runtime errors
+// 
+// what happens if we:
+//  forget to increment i
+//  error on all inputs
+//  forget to check for null
 
 
 object Main extends App {
@@ -16,19 +17,33 @@ object Main extends App {
 
   case class Person(name: String, age: Int, color: Color)
 
-  print("enter a name: ")
-  val name  = getLine
-  print("enter an age: ")
-  val output = for {
-    age <- toAge(getLine).right
-    _ <- Right(print("enter a color: ")).right
-    color <- toColor(getLine).right
-  } yield name + " is " + age + " years old; " +  name + "'s favorite color is " + color
-
-  output match {
-    case Right(o) => println(o)
-    case Left(e)=> println(e)
+  var i = 0
+  var best : Person = null  // I have to annotate the type
+  while(i < 3) {
+    val p = readPerson
+    p match {
+      case Right(p) =>
+        if( best  == null  || best.age < p.age ) {
+          best = p
+        }
+      case Left(e) => println(e)
+    }
+    i = i + 1
   }
+  println("The oldest person is: " + best.name)
+
+
+  def readPerson : Either[String,Person] = {
+    print("enter a name: ")
+    val name  = getLine
+    print("enter an age: ")
+    for {
+      age <- toAge(getLine).right
+      _ <- Right(print("enter a color: ")).right
+      color <- toColor(getLine).right
+    } yield Person(name, age, color)
+  }
+
 
   def toAge(s: String) : Either[String,Int] = {
     try {
@@ -50,12 +65,19 @@ object Main extends App {
       Left("invalid color")
     }
   }
+
+  def printPerson(p: Person) = {
+    println(p.name + " is " + p.age + " years old; " +  p.name + "'s favorite color is " + p.color)
+  }
 }
 
 object IO {
   val scan = new java.util.Scanner( System.in )
-  def getLine() =  {
-    scan.nextLine
-  }
+  def getLine =  scan.nextLine
 
+}
+
+object Color extends Enumeration {
+  type Color = Value
+  val Red, Blue, Green = Value
 }

@@ -1,11 +1,7 @@
-// Let's talk about options as lists with 1 or 0 elements.
+// Now we use Either[String,String]
 //
-// Now we are using Option.map and Option.flatMap
-// There is less nesting, but  we've exacerbated the error problem. We have no idea
-// where errors come from!
-//
-// Notice the lambda/anonymous function sentence, also notice the use an alternative for comprehension
-
+// This hits all the bases: typesafe, error handling, returning rich types when there is a possibility for failure
+// let's just clean it up a bit
 
 object Color extends Enumeration {
   type Color = Value
@@ -20,55 +16,39 @@ object Main extends App {
 
   case class Person(name: String, age: Int, color: Color)
 
-
-  // print("Enter a name: ")
-  // val name = getLine
-  // val age = toAge(getLine)
-  // val output = age.flatMap { age =>
-  //   val color = toColor(getLine)
-  //   color.map { color =>
-  //     Person(name, age, color)
-  //   }
-  // }
-
-  // this is an equivalend sugared version
-  //
   print("enter a name: ")
-  val output = for {
-    name <- Some(getLine)
-    _ = print("enter an age: ")
-    age <- toAge(getLine)
-    _ = print("enter a color: ")
-    color <- toColor(getLine)
-  } yield Person(name, age, color)
+  val name  = getLine
+  print("enter an age: ")
+  val output = for {A
+    age <- toAge(getLine).right
+    _ <- Right(print("enter a color: ")).right
+    color <- toColor(getLine).right
+  } yield name + " is " + age + " years old; " +  name + "'s favorite color is " + color
 
-  output match {
-    case Some(p) => printPerson(p)
-    case None => println("error")
+  output match {A
+    case Right(o) => println(o)
+    case Left(e)=> println(e)
   }
 
-  def toAge(s: String) : Option[Int] = {
+  def toAge(s: String) : Either[String,Int] = {
     try {
-      Some(Integer.parseInt(s))
+      val i = Integer.parseInt(s)
+      Right(i)
     } catch {
-      case e: Exception => None
+      case e: Exception => Left("invalid age")
     }
   }
 
-  def toColor(s : String) : Option[Color] = {
+  def toColor(s : String) : Either[String, Color] = {
     if( s == "red" ) {
-      Some(Red)
+      Right(Red)
     } else if (s == "green" ){
-      Some(Green)
+      Right(Green)
     } else if( s == "blue") {
-      Some(Blue)
+      Right(Blue)
     } else {
-      None
+      Left("invalid color")
     }
-  }
-
-  def printPerson(p: Person) = {
-    println(p.name + " is " + p.age + " years old; " +  p.name + "'s favorite color is " + p.color)
   }
 }
 
@@ -77,5 +57,4 @@ object IO {
   def getLine() =  {
     scan.nextLine
   }
-
 }
