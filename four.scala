@@ -19,13 +19,13 @@ object Main extends App {
   print("enter a name: ")
   val name  = getLine
   print("enter an age: ")
-  val output = for {A
+  val output = for {
     age <- toAge(getLine).right
     _ <- Right(print("enter a color: ")).right
     color <- toColor(getLine).right
   } yield name + " is " + age + " years old; " +  name + "'s favorite color is " + color
 
-  output match {A
+  output match {
     case Right(o) => println(o)
     case Left(e)=> println(e)
   }
