@@ -10,27 +10,7 @@ object Main extends App {
   // why do we need: .right.toOption and .flatten?
   val people : Seq[Person] = (1 to 3).toList.map { _ => readPerson.right.toOption }.flatten
 
-
-  def maxBy[A](xs: Seq[A], cmp: A => Int) : Option[A] =  {
-    xs match {
-      case Nil => None // commenting this out causes a warning
-      case x::Nil => Some(x)
-      case x::xs =>
-        maxBy(xs, cmp).map { m =>
-          if ( cmp(x) > cmp(m) ) {
-            x
-          } else {
-            m
-          }
-        }
-    }
-  }
-
-  (maxBy[Person](people, _.age)) match {
-    case Some(p) => printPerson(p)
-    case None => println("no people")
-  }
-
+  printPerson((people.maxBy(_.age)))
 
 
   def readPerson : Either[String,Person] = {
