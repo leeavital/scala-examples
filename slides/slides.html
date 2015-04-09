@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Functional Programming With Scala</title>
+<title>Types &amp; Functions: FP with Scala</title>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="copyright" content="Copyright &#169; Foobar Inc." />
+<meta name="copyright" content="Copyright &#169; Lee Avital" />
 <meta name="generator" content="AsciiDoc 8.6.9" />
 <style type="text/css">
 /* Shared CSS for AsciiDoc xhtml11 and html5 backends */
@@ -3834,21 +3834,69 @@ setTimeout(w3c_slidy.hide_slides, 50);
 </head>
 <body class="article" style="max-width:45em">
 <div id="header" class="slide">
-<h1>Functional Programming With Scala</h1>
+<h1>Types &amp; Functions: FP with Scala</h1>
 <span id="author">Lee Avital</span><br />
 </div>
 <div class="sect1 slide">
-<h1 id="_why_functional_programming">Why Functional Programming</h1>
+<h1 id="_pain_points_in_main_stream_programming_languages">Pain Points In Main Stream Programming Languages</h1>
 <div class="sectionbody" style="max-width:45em">
-<div class="sect2">
-<h3 id="_referential_transparency_no_side_effects">Referential transparency (no side effects)</h3>
+<div class="paragraph"><p>Semantic vs Syntactic correctness</p></div>
+<div class="paragraph"><p>A program accepted by the compiler/interpreter should be correct.</p></div>
+<ul class="">
+<li>
+<span>
+scripting languages
+</span>
+<ul class="">
+<li>
+<span>
+"strict mode"
+</span>
+</li>
+<li>
+<span>
+type hints
+</span>
+</li>
+<li>
+<span>
+static analysis
+</span>
+</li>
+</ul>
+</li>
+<li>
+<span>
+compiled languages
+</span>
+<ul class="">
+<li>
+<span>
+classes
+</span>
+</li>
+<li>
+<span>
+generics
+</span>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect1 slide">
+<h1 id="_install_scala">Install Scala</h1>
+<div class="sectionbody" style="max-width:45em">
 <div class="listingblock">
 <div class="content">
-<pre><code><span style="color:#000000; font-weight:bold">def</span> <span style="color:#010181">length</span><span style="color:#000000">(</span>s<span style="color:#000000">):</span>
-  <span style="color:#000000; font-weight:bold">False</span> <span style="color:#000000">=</span> <span style="color:#000000; font-weight:bold">True</span>
-  <span style="color:#000000; font-weight:bold">return</span> <span style="color:#0057ae">len</span><span style="color:#000000">(</span>s<span style="color:#000000">)</span></code></pre>
+<pre><code>&lt;package-manager&gt; install scala</code></pre>
 </div></div>
 </div>
+</div>
+<div class="sect1 slide">
+<h1 id="_why_functional_programming">Why Functional Programming?</h1>
+<div class="sectionbody" style="max-width:45em">
 <div class="sect2">
 <h3 id="_first_class_functions_allow_us_to_be_very_expressive">First class functions allow us to be very expressive</h3>
 <div class="paragraph"><p>Iterative:</p></div>
@@ -3862,6 +3910,20 @@ setTimeout(w3c_slidy.hide_slides, 50);
 <div class="listingblock">
 <div class="content">
 <pre><code>lengths <span style="color:#000000">=</span> <span style="color:#0057ae">map</span><span style="color:#000000">(</span><span style="color:#0057ae">len</span><span style="color:#000000">,</span> xs<span style="color:#000000">)</span></code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1 slide">
+<h1 id="_why_functional_programming_2">Why Functional Programming? (2)</h1>
+<div class="sectionbody" style="max-width:45em">
+<div class="sect2">
+<h3 id="_referential_transparency_no_side_effects">Referential transparency (no side effects)</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code><span style="color:#000000; font-weight:bold">def</span> <span style="color:#010181">length</span><span style="color:#000000">(</span>s<span style="color:#000000">):</span>
+  <span style="color:#000000; font-weight:bold">False</span> <span style="color:#000000">=</span> <span style="color:#000000; font-weight:bold">True</span>
+  <span style="color:#000000; font-weight:bold">return</span> <span style="color:#0057ae">len</span><span style="color:#000000">(</span>s<span style="color:#000000">)</span></code></pre>
 </div></div>
 </div>
 </div>
@@ -3889,7 +3951,29 @@ System<span style="color:#000000">.</span>out<span style="color:#000000">.</span
 </div>
 </div>
 <div class="sect1 slide">
-<h1 id="_why_scala">Why Scala</h1>
+<h1 id="_why_a_strong_type_system_2">Why a strong type system? (2)</h1>
+<div class="sectionbody" style="max-width:45em">
+<div class="sect2">
+<h3 id="_primitives_are_not_descriptive">Primitives are  not  descriptive</h3>
+<div class="listingblock">
+<div class="content">
+<pre><code>String name <span style="color:#000000">=</span> <span style="color:#bf0303">&quot;Lee&quot;</span>
+String color <span style="color:#000000">=</span> <span style="color:#bf0303">&quot;red&quot;</span>
+
+name <span style="color:#000000">==</span> color</code></pre>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><code><span style="color:#000000; font-weight:bold">val</span> name <span style="color:#000000">=</span> <span style="color:#010181">Name</span><span style="color:#000000">(</span><span style="color:#bf0303">&quot;Lee&quot;</span><span style="color:#000000">)</span>
+<span style="color:#000000; font-weight:bold">val</span> color <span style="color:#000000">=</span> <span style="color:#010181">Color</span><span style="color:#000000">(</span><span style="color:#bf0303">&quot;red&quot;</span><span style="color:#000000">)</span>
+
+name <span style="color:#000000">==</span> color <span style="color:#838183; font-style:italic">//  won't compile, type error</span></code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1 slide">
+<h1 id="_why_scala">Why Scala?</h1>
 <div class="sectionbody" style="max-width:45em">
 <ul class="">
 <li>
@@ -3899,7 +3983,12 @@ JVM based
 <ul class="">
 <li>
 <span>
-we can use Hadoop, Finagle, everything in the Java ecosystem.
+Tooling (build systems, dependency managers, profilers)
+</span>
+</li>
+<li>
+<span>
+Libraries
 </span>
 </li>
 </ul>
@@ -3912,6 +4001,11 @@ Strong type system
 <li>
 <span>
 Less verbose library design than Java
+</span>
+</li>
+<li>
+<span>
+Interactive top level (REPL)
 </span>
 </li>
 </ul>
@@ -3930,8 +4024,7 @@ Less verbose library design than Java
 <div class="sectionbody" style="max-width:45em">
 <div class="listingblock">
 <div class="content">
-<pre><code>:align: center
-http://github.com/leeavital/scala-examples</code></pre>
+<pre><code>http://github.com/leeavital/scala-examples</code></pre>
 </div></div>
 </div>
 </div>

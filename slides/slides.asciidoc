@@ -1,24 +1,39 @@
-Functional Programming With Scala
+Types & Functions: FP with Scala
 =================================
 :author:    Lee Avital
-:copyright: Foobar Inc.
 :max-width: 45em
 :data-uri:
 :icons:
 
 
-Why Functional Programming
+Pain Points In Main Stream Programming Languages
+------------------------------------------------
+
+Semantic vs Syntactic correctness
+
+A program accepted by the compiler/interpreter should be correct.
+
+* scripting languages
+** "strict mode"
+** type hints
+** static analysis
+
+* compiled languages
+** classes
+** generics
+
+
+Install Scala
+-------------
+
+[align="center"]
+-----------------------------------
+<package-manager> install scala
+-----------------------------------
+
+
+Why Functional Programming?
 --------------------------
-
-=== Referential transparency (no side effects)
-
-
-[source,python]
----------------------
-def length(s):
-  False = True
-  return len(s)
----------------------
 
 
 === First class functions allow us to be very expressive
@@ -38,6 +53,20 @@ Functional:
 ----------------------
 lengths = map(len, xs)
 ----------------------
+
+
+Why Functional Programming? (2)
+------------------------------
+
+=== Referential transparency (no side effects)
+
+
+[source,python]
+---------------------
+def length(s):
+  False = True
+  return len(s)
+---------------------
 
 
 Why a strong type system?
@@ -61,11 +90,37 @@ public ActionBox getActionBox( Component a ) {
 ---------------------------------------------------
 
 
-Why Scala
----------
+Why a strong type system? (2)
+-----------------------------
+
+
+=== Primitives are  not  descriptive
+[source,java]
+-------------------
+String name = "Lee"
+String color = "red"
+
+name == color
+-------------------
+
+
+[source,scala]
+-------------------
+val name = Name("Lee")
+val color = Color("red")
+
+name == color //  won't compile, type error
+-------------------
+
+
+
+
+Why Scala?
+----------
 
 * JVM based
-** we can use Hadoop, Finagle, everything in the Java ecosystem.
+** Tooling (build systems, dependency managers, profilers)
+** Libraries
 * Strong type system
 * Less verbose library design than Java
 * Interactive top level (REPL)
